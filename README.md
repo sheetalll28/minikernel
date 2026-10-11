@@ -4,8 +4,6 @@ A tiny GPU kernel language, a compiler that emits **NVIDIA PTX**, and a **differ
 
 Every valid MiniKernel program has **exactly one correct output**. There is no undefined behavior and no data races. A mismatch is a real bug in an implementation — not a disagreement about the spec.
 
-This project is built for compiler-verification work: the same skills used to test NVIDIA GPU compilers (language rules, C/C++/PTX, Python automation).
-
 ## Why
 
 Compiler testers (Csmith, YARPGen, CUDAsmith) spend most of their effort avoiding undefined behavior, because a program with UB can legally give two answers.
@@ -110,12 +108,3 @@ Generated PTX was loaded with CuPy and compared to the interpreter:
 
 No NVIDIA compiler bug was claimed. These runs show the PTX back end follows the spec on a real GPU, including the cases where raw PTX `div` is unspecified.
 
-If a later run mismatches: treat your generator, interpreter, and back end as guilty first. Shrink with `python3 -m minikernel reduce --seed N`.
-
-## Résumé line
-
-> Built MiniKernel, a small GPU language and PTX compiler with a differential tester (interpreter vs generated PTX/CUDA); wrote a total language spec so every valid program has one correct output; automatically generate and reduce tests.
-
-## License
-
-MIT. See [LICENSE](LICENSE).
