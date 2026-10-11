@@ -1,4 +1,4 @@
-"""MiniKernel integer rules. This file is the executable spec (SPEC §5)."""
+"""Integer rules from spec/SPEC.md section 5."""
 
 INT_MIN = -2**31
 INT_MAX = 2**31 - 1
