@@ -15,13 +15,7 @@ from .errors import CompileError, LaunchError
 from .interpreter import POISON
 from .nodes import Kernel
 
-SHIM = """
-#define __global__
-#define __device__
-#define __forceinline__ inline
-struct Dim { unsigned x; };
-static Dim blockIdx, blockDim, threadIdx;
-"""
+RUNTIME = Path(__file__).resolve().parents[2] / "runtime"
 
 
 def run_cuda_on_cpu(
@@ -32,7 +26,7 @@ def run_cuda_on_cpu(
     opt: str = "-O0",
 ) -> dict[str, list[int]]:
     cxx = os.environ.get("CXX", "clang++")
-    code = SHIM + compile_to_cuda(kernel)
+    code = '#include "cuda_host_shim.hpp"\n' + compile_to_cuda(kernel)
     arrays = []
     for name in kernel.inputs:
         vals = ", ".join("INT_MIN" if v == -2**31 else f"(int){v}" for v in inputs[name])
@@ -75,6 +69,8 @@ int main() {{
             "-Wno-unused-but-set-variable",
             "-fsanitize=undefined",
             "-fno-sanitize-recover=all",
+            "-I",
+            str(RUNTIME),
             str(src),
             "-o",
             str(exe),

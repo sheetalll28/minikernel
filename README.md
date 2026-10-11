@@ -28,7 +28,7 @@ GPU steps I actually ran are in `notebooks/colab_first_run.ipynb`.
                                       → CUDA C++ (nvcc, or clang++ on CPU)
 ```
 
-Spec: `spec/SPEC.md`. Examples: `examples/`. Tests: `tests/`.
+Spec: `spec/SPEC.md`. Integer helpers in C++: `runtime/mk_ops.hpp` (used by generated CUDA and by `clang++` + UBSan). Examples: `examples/`. Tests: `tests/`.
 
 ## What I actually ran
 

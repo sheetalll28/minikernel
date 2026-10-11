@@ -23,6 +23,7 @@ def test_cuda_uses_helpers():
     k = compile_source("kernel k(in a: int[], out c: int[]) { c[tid] = a[tid] + 1; }")
     cuda = compile_to_cuda(k)
     assert "mk_add" in cuda
+    assert '#include "mk_ops.hpp"' in cuda
     assert 'extern "C"' in cuda
 
 

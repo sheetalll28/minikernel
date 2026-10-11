@@ -1,32 +1,5 @@
 from .nodes import Assign, Binary, For, If, Index, Kernel, Let, Num, Store, Tid, Unary, Var
 
-CUDA_PRELUDE = r"""#include <climits>
-
-__device__ __forceinline__ int mk_add(int a, int b) { return (int)((unsigned)a + (unsigned)b); }
-__device__ __forceinline__ int mk_sub(int a, int b) { return (int)((unsigned)a - (unsigned)b); }
-__device__ __forceinline__ int mk_mul(int a, int b) { return (int)((unsigned)a * (unsigned)b); }
-__device__ __forceinline__ int mk_neg(int a) { return (int)(0u - (unsigned)a); }
-
-__device__ __forceinline__ int mk_div(int a, int b) {
-    if (b == 0) return 0;
-    if (a == INT_MIN && b == -1) return INT_MIN;
-    return a / b;
-}
-
-__device__ __forceinline__ int mk_mod(int a, int b) {
-    if (b == 0) return a;
-    if (a == INT_MIN && b == -1) return 0;
-    return a % b;
-}
-
-__device__ __forceinline__ int mk_shl(int a, int b) { return (int)((unsigned)a << (b & 31)); }
-__device__ __forceinline__ int mk_shr(int a, int b) { return a >> (b & 31); }
-
-__device__ __forceinline__ int mk_load(const int *arr, int i, unsigned n) {
-    return (unsigned)i < n ? arr[i] : 0;
-}
-"""
-
 FUNCS = {
     "+": "mk_add",
     "-": "mk_sub",
@@ -56,7 +29,7 @@ class CudaGenerator:
         for stmt in k.body:
             self.stmt(stmt, 1)
         self.lines.append("}")
-        return CUDA_PRELUDE + "\n" + "\n".join(self.lines) + "\n"
+        return '#include "mk_ops.hpp"\n\n' + "\n".join(self.lines) + "\n"
 
     def stmt(self, node, depth: int) -> None:
         if isinstance(node, Let):
